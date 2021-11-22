@@ -1,10 +1,11 @@
 import cv2
 import imutils
 import numpy as np
+from tensorflow import keras
 from skimage.segmentation import clear_border
 from imutils.perspective import four_point_transform
-from tensorflow import keras
 from tensorflow.keras.preprocessing.image import img_to_array
+from sudoku_solver import sudoku_solver
 
 class get_Puzzle:
     def find_puzzle(self, image):
@@ -64,6 +65,8 @@ def sudoku_extractor():
     img = imutils.resize(img, width=600)
     get_puzzle = get_Puzzle()
     (puzzle,warped) = get_puzzle.find_puzzle(img)
+    # the warped image is used for processing and,
+    # outputs are plotted on the "puzzle" image
     board = np.zeros((9,9), dtype="int")
     # we divide the warped image, which was the grayscale image on which mask was applied,
     # into 9x9 grid like sudoku, to get each individual cells
@@ -92,5 +95,5 @@ def sudoku_extractor():
             board[y,x] = prediction
         
         cells.append(row)
-
-    return board.tolist()
+    
+    solution = sudoku_solver(cells, board.tolist())
