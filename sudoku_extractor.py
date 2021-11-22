@@ -60,7 +60,7 @@ class get_Puzzle:
 
 def sudoku_extractor():
     model = keras.models.load_model("sudoku_model")
-    img = cv2.imread("sudoku.jpg")
+    img = cv2.imread("Examples/sudoku1.jpg")
     img = imutils.resize(img, width=600)
     get_puzzle = get_Puzzle()
     (puzzle,warped) = get_puzzle.find_puzzle(img)
