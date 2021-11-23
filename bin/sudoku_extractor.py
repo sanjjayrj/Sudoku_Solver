@@ -1,5 +1,6 @@
 import cv2
 import imutils
+from pathlib import Path
 import numpy as np
 from tensorflow import keras
 from skimage.segmentation import clear_border
@@ -60,8 +61,8 @@ class get_Puzzle:
         return digit_img
 
 def sudoku_extractor():
-    model = keras.models.load_model("../models/sudoku_model_2")
-    img = cv2.imread("../examples/sudoku.jpg")
+    model = keras.models.load_model(Path("../models/sudoku_model_2"))
+    img = cv2.imread(Path("../examples"))
     img = imutils.resize(img, width=600)
     get_puzzle = get_Puzzle()
     (puzzle,warped) = get_puzzle.find_puzzle(img)
