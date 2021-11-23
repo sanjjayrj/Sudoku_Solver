@@ -59,7 +59,7 @@ class get_Puzzle:
         return digit_img
 
 def sudoku_extractor():
-    model = keras.models.load_model("sudoku_model")
+    model = keras.models.load_model("sudoku_model.h5")
     img = cv2.imread("Examples/sudoku1.jpg")
     img = imutils.resize(img, width=600)
     get_puzzle = get_Puzzle()
