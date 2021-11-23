@@ -26,14 +26,14 @@ class sudoku_model:
         model.add(BatchNormalization())
         model.add(MaxPool2D((2,2), strides=2, padding="same" ))
         model.add(Flatten())
-        model.add(Dense(units=256, activation="relu"))
+        model.add(Dense(units=512, activation="relu"))
         model.add(Dropout(0.2))
-        model.add(Dense(units=256, activation="relu"))
+        model.add(Dense(units=512, activation="relu"))
         model.add(Dropout(0.3))
         model.add(Dense(units=num_categories, activation="softmax"))
 
         print(model.summary())
-        print(model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy']))
+        print(model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.0005), metrics=['accuracy']))
 
         return model
 
@@ -50,23 +50,23 @@ if __name__ == "__main__":
     y_valid = keras.utils.to_categorical(y_valid, num_categories)
 
     # we are augmenting the data now
-    # datagen = ImageDataGenerator(
-    #     width_shift_range=0.2,
-    #     height_shift_range=0.2,
-    #     horizontal_flip=False,
-    #     vertical_flip=False
-    #     )
+    datagen = ImageDataGenerator(
+        width_shift_range=0.4,
+        height_shift_range=0.4
+        )
     batch = 32
-    # datagen.fit(x_train)
-    # image_iter = datagen.flow(x_train, y_train, batch_size = batch)
+    datagen.fit(x_train)
+    image_iter = datagen.flow(x_train, y_train, batch_size = batch)
     sudoku_model = sudoku_model()
     model = sudoku_model.build(28, 28, 1, num_categories)
     model.fit(
-        x_train,
-        y_train,
+        # x_train,
+        # y_train,
+        image_iter,
         validation_data=(x_valid, y_valid),
-        epochs=10,
-        verbose=1,
-        batch_size=batch
+        epochs=25,
+        steps_per_epoch=len(x_train)/batch,
+        verbose=1
+        #batch_size=batch
     )
-    model.save("sudoku_model.h5", save_format="h5")
+    model.save("sudoku_model_2", save_format="h5")

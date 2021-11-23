@@ -38,7 +38,9 @@ class get_Puzzle:
         threshold = cv2.threshold(cell, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU) [1]
         # in each cell, the following function removes edges in each cell
         threshold = clear_border(threshold)
-        contours = cv2.findContours(threshold.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # cv2.imshow("thresholding", threshold)
+        # cv2.waitKey(0)
+        contours = cv2.findContours(threshold.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         contours = imutils.grab_contours(contours)
         # if contour doesnt exist
         if len(contours) == 0:
@@ -59,8 +61,8 @@ class get_Puzzle:
         return digit_img
 
 def sudoku_extractor():
-    model = keras.models.load_model("sudoku_model.h5")
-    img = cv2.imread("Examples/sudoku1.jpg")
+    model = keras.models.load_model("sudoku_model_2")
+    img = cv2.imread("Examples/sudoku.jpg")
     img = imutils.resize(img, width=600)
     get_puzzle = get_Puzzle()
     (puzzle,warped) = get_puzzle.find_puzzle(img)
@@ -97,10 +99,13 @@ def sudoku_extractor():
         locations.append(row)
     
     # construct a Sudoku puzzle from the board
-    print("[INFO] OCR'd Sudoku board:")
+    print("Sudoku board:")
     puzzle = Sudoku(3, 3, board=board.tolist())
     puzzle.show()
     # passing the extracted board
+    print("Sudoku solution:")
+    solution = puzzle.solve()
+    solution.show_full()
     #solution = sudoku_solver(cells, board.tolist())
 
 sudoku_extractor()
