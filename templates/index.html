@@ -1,0 +1,24 @@
+{% extends "default.html" %} {% block body %}
+<div class="main-box">
+    <h2>Upload an image to get started!</h2>
+    <form action="{{ url_for('home') }}" method="POST" enctype="multipart/form-data" id="main-form">
+      <div class="view-img">
+          <img src="{{ url_for('static',filename='images/sudoku.jpg') }}" alt="Sudoku HD pic" style=" width:512px;height:512px;">
+      </div>
+
+    <div class=" submit-button ">
+      <label>
+      <input type="file" style="display: none;" onchange="document.getElementById('main-form').submit();">
+      {# <a href=" javascript:;" onclick=" document.getElementById( 'main-form' ).submit(); "> #}
+      <a>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <div>upload</div>
+      </a>
+      </label>
+    </div>
+  </form>
+</div>
+{% endblock %}

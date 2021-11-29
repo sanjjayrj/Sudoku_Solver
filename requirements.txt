@@ -3,3 +3,4 @@ imutils
 tensorflow
 scikit-image
 py-sudoku
+flask
