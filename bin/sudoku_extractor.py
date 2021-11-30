@@ -102,8 +102,7 @@ def sudoku_extractor(img_path):
 def show_solution(solution):
     # pass numpy array as solution
     template = cv2.imread("template.jpg")
-    cv2.imshow("template", template)
-    cv2.waitKey(0)
+    
     X = template.shape[1] // 9
     Y = template.shape[0] // 9
     for y in range(0,9):
@@ -113,9 +112,10 @@ def show_solution(solution):
             x2 = (x+1) * X
             y2 = (y+1) * Y
             x_center = (x2-x1)/2 + x1
-            y_center = (y2-y1)/2 + y1
-            cv2.putText(template, str(solution[y][x]), x_center, y_center, cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
-            
+            y_center = ((y2-y1)/2)*(1.2) + y1
+            org = (int(x_center),int(y_center))
+            template = cv2.putText(template, str(solution[y][x]), org, cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
+    return template       
 def solver(board):
     return sudoku.solve(board)
 
