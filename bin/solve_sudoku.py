@@ -43,6 +43,7 @@ def create_grid(puzzle_str):
     digits = list(map(int, lines))
     # Turning it to a 9x9 numpy array
     grid = np.array(digits).reshape(9,9)
+    print(grid)
     return grid
 
 def solve(grid):
