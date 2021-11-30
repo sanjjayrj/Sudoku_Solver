@@ -99,6 +99,23 @@ def sudoku_extractor(img_path):
         locations.append(row)
     return board, warped
 
+def show_solution(solution):
+    # pass numpy array as solution
+    template = cv2.imread("template.jpg")
+    cv2.imshow("template", template)
+    cv2.waitKey(0)
+    X = template.shape[1] // 9
+    Y = template.shape[0] // 9
+    for y in range(0,9):
+        for x in range(0, 9):
+            x1 = x * X
+            y1 = y * Y
+            x2 = (x+1) * X
+            y2 = (y+1) * Y
+            x_center = (x2-x1)/2 + x1
+            y_center = (y2-y1)/2 + y1
+            cv2.putText(template, str(solution[y][x]), x_center, y_center, cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
+            
 def solver(board):
     return sudoku.solve(board)
 
