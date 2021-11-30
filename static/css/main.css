@@ -176,3 +176,65 @@ body {
     height: 33px;
     float: left;
 }
+
+#field03,
+#field13,
+#field23,
+#field33,
+#field43,
+#field53,
+#field63,
+#field73,
+#field83 {
+    border-left: 2px solid black;
+}
+
+#field06,
+#field16,
+#field26,
+#field36,
+#field46,
+#field56,
+#field66,
+#field76,
+#field86 {
+    border-left: 2px solid black;
+    border-collapse: collapse;
+}
+
+#field30,
+#field31,
+#field32,
+#field33,
+#field34,
+#field35,
+#field36,
+#field37,
+#field38 {
+    border-top: 2px solid black;
+    border-collapse: collapse;
+}
+
+#field60,
+#field61,
+#field62,
+#field63,
+#field64,
+#field65,
+#field66,
+#field67,
+#field68 {
+    border-top: 2px solid black;
+    border-collapse: collapse;
+}
+
+table {
+    border: 5px solid black;
+    border-collapse: collapse;
+}
+
+th,
+tr {
+    border: 1px solid black;
+    border-collapse: collapse;
+}

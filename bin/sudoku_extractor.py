@@ -30,9 +30,8 @@ class GetPuzzle:
         
         if puzzle_shape is None:
             raise Exception(("Could not find puzzle!!!"))
-        puzzle = four_point_transform(image, puzzle_shape.reshape(4,2))
         warped = four_point_transform(gray, puzzle_shape.reshape(4,2))
-        return (puzzle,warped)
+        return warped
 
     def get_digits(self, cell):
         threshold = cv2.threshold(cell, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU) [1]
@@ -65,7 +64,7 @@ def sudoku_extractor(img_path):
     model = keras.models.load_model(os.path.join(get_puzzle.MODEL_FOLDER, "sudoku_model_2"))
     img = cv2.imread(img_path)
     img = imutils.resize(img, width=600)
-    (puzzle, warped) = get_puzzle.find_puzzle(img)
+    warped = get_puzzle.find_puzzle(img)
     # the warped image is used for processing and,
     # outputs are plotted on the "puzzle" image
     board = np.zeros((9,9), dtype="int")
@@ -101,7 +100,7 @@ def sudoku_extractor(img_path):
 
 def show_solution(solution):
     # pass numpy array as solution
-    template = cv2.imread("template.jpg")
+    template = cv2.imread("./bin/template.jpg")
     
     X = template.shape[1] // 9
     Y = template.shape[0] // 9
@@ -115,7 +114,8 @@ def show_solution(solution):
             y_center = ((y2-y1)/2)*(1.2) + y1
             org = (int(x_center),int(y_center))
             template = cv2.putText(template, str(solution[y][x]), org, cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
-    return template       
+    cv2.imwrite(os.path.join("./static/working-dir", "final_output.png"), template)
+
 def solver(board):
     return sudoku.solve(board)
 
