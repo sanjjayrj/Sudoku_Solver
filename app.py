@@ -35,8 +35,8 @@ def home():
         corrected_board=np.zeros((9,9))
         for elem in request.form:
             index=elem[-2:]
-            corrected_board[index[0],index[1]]=request.form.get(elem)
-            print(corrected_board)
+            corrected_board[int(index[0]),int(index[1])]=request.form.get(elem)
+        print(corrected_board)
         return render_template('index.html', state=3, arr=None)
     else:
         return render_template('index.html', state=0, arr=None)

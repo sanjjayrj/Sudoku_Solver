@@ -98,11 +98,6 @@ def sudoku_extractor(img_path):
 
         locations.append(row)
     return board, warped
-    # print("Sudoku board:")
-    # print(board)
-    # print("Sudoku solution:")
-    # solved_board=sudoku.solve(board)
-    # print(solved_board)
 
 def solver(board):
     return sudoku.solve(board)
