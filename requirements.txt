@@ -2,5 +2,4 @@ opencv-python
 imutils
 tensorflow
 scikit-image
-py-sudoku
 flask
