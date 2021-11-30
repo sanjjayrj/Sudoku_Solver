@@ -9,6 +9,11 @@ body {
     background: linear-gradient(#141e30, #243b55);
 }
 
+.input-file {
+    display: flex;
+    justify-content: center;
+}
+
 .submit-button {
     display: flex;
     justify-content: center;
@@ -17,6 +22,7 @@ body {
 .view-img {
     display: flex;
     justify-content: center;
+    size: 50%;
 }
 
 .main-box {
@@ -61,7 +67,7 @@ body {
 }
 
 
-/* animation of submist button */
+/* animation of submit button */
 
 .main-box a:hover {
     background: #03e9f4;
@@ -152,4 +158,21 @@ body {
     100% {
         bottom: 100%;
     }
+}
+
+#sudoku {
+    width: 297px;
+    height: 297px;
+}
+
+.parentCube {
+    width: 99px;
+    height: 99px;
+    float: left;
+}
+
+.childCube {
+    width: 33px;
+    height: 33px;
+    float: left;
 }

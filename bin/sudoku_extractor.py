@@ -1,14 +1,14 @@
-import cv2
-import imutils
-from pathlib import Path
+import cv2, imutils, os
 import numpy as np
+import solve_sudoku as sudoku
 from tensorflow import keras
 from skimage.segmentation import clear_border
 from imutils.perspective import four_point_transform
 from tensorflow.keras.preprocessing.image import img_to_array
-from sudoku import Sudoku
-
-class get_Puzzle:
+# from sudoku import Sudoku
+class GetPuzzle:
+    def __init__(self):
+        self.MODEL_FOLDER="./models/"
     def find_puzzle(self, image):
         # using adaptive thresholding
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -60,12 +60,12 @@ class get_Puzzle:
         digit_img = cv2.bitwise_and(threshold, threshold, mask=mask)
         return digit_img
 
-def sudoku_extractor():
-    model = keras.models.load_model(Path("../models/sudoku_model_2"))
-    img = cv2.imread(Path("../examples"))
+def sudoku_extractor(img_path):
+    get_puzzle = GetPuzzle()
+    model = keras.models.load_model(os.path.join(get_puzzle.MODEL_FOLDER, "sudoku_model_2"))
+    img = cv2.imread(img_path)
     img = imutils.resize(img, width=600)
-    get_puzzle = get_Puzzle()
-    (puzzle,warped) = get_puzzle.find_puzzle(img)
+    (puzzle, warped) = get_puzzle.find_puzzle(img)
     # the warped image is used for processing and,
     # outputs are plotted on the "puzzle" image
     board = np.zeros((9,9), dtype="int")
@@ -97,15 +97,15 @@ def sudoku_extractor():
                 board[y,x] = prediction
 
         locations.append(row)
-    
-    # construct a Sudoku puzzle from the board
-    print("Sudoku board:")
-    puzzle = Sudoku(3, 3, board=board.tolist())
-    puzzle.show()
-    # passing the extracted board
-    print("Sudoku solution:")
-    solution = puzzle.solve()
-    solution.show_full()
-    #solution = sudoku_solver(cells, board.tolist())
+    return board, warped
+    # print("Sudoku board:")
+    # print(board)
+    # print("Sudoku solution:")
+    # solved_board=sudoku.solve(board)
+    # print(solved_board)
 
-sudoku_extractor()
+def solver(board):
+    return sudoku.solve(board)
+
+if __name__=="__main__":
+    sudoku_extractor("../examples/sudoku.jpg")

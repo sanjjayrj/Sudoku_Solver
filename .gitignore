@@ -1,3 +1,4 @@
 pdfs/
 __pycache__/
 /sudoku_env
+/bin/__pycache__/
