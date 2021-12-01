@@ -1,5 +1,5 @@
 opencv-python
 imutils
-tensorflow
+tensorflow==2.7
 scikit-image
 flask
