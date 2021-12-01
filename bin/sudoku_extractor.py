@@ -5,7 +5,7 @@ from tensorflow import keras
 from skimage.segmentation import clear_border
 from imutils.perspective import four_point_transform
 from tensorflow.keras.preprocessing.image import img_to_array
-# from sudoku import Sudoku
+
 class GetPuzzle:
     def __init__(self):
         self.MODEL_FOLDER="./models/"
@@ -13,15 +13,19 @@ class GetPuzzle:
         # using adaptive thresholding
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (7,7), 3)
+        # using adaptive thresholding to make the sudoku more clear
+        # and bitwise not to invert the colour for input to model
         th = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
         th = cv2.bitwise_not(th)
         
         #using the output from adapative thresholding to find contours
         contours = cv2.findContours(th.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        # imutils package makes it easier to identify and mark contours in images
         contours = imutils.grab_contours(contours)
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
 
         puzzle_shape = None
+        # checking to see if puzzle exists
         for c in contours:
             approx = cv2.approxPolyDP(c, 0.02 * cv2.arcLength(c, True), True)
             if len(approx) == 4:
@@ -30,7 +34,12 @@ class GetPuzzle:
         
         if puzzle_shape is None:
             raise Exception(("Could not find puzzle!!!"))
+        """
+            the following is perspective transform from opencv,
+            imutils makes it easier, by providing the function four_point_transform()
+        """
         warped = four_point_transform(gray, puzzle_shape.reshape(4,2))
+        # the returned image will be just the sudoku part from initial image
         return warped
 
     def get_digits(self, cell):
@@ -65,23 +74,24 @@ def sudoku_extractor(img_path):
     img = cv2.imread(img_path)
     img = imutils.resize(img, width=600)
     warped = get_puzzle.find_puzzle(img)
-    # the warped image is used for processing and,
-    # outputs are plotted on the "puzzle" image
     board = np.zeros((9,9), dtype="int")
-    # we divide the warped image, which was the grayscale image on which mask was applied,
-    # into 9x9 grid like sudoku, to get each individual cells
+    """
+        the warped image is used for processing,
+        a board of 9x9 size is initialized for storing extracted values.
+        warped image is divided in both dimensions to get the starting points
+        of each cell,
+        using that each cell is spanned in a loop
+        and passed onto another function to process the cell for prediction.
+    """
     X = warped.shape[1] // 9
     Y = warped.shape[0] // 9
-    locations = []
     # Traversing the grid and predicting the digits by cell number.
     for y in range(0,9):
-        row = []
         for x in range(0, 9):
             x1 = x * X
             y1 = y * Y
             x2 = (x+1) * X
             y2 = (y+1) * Y
-            row.append((x1,y1, x2,y2))
             cell = warped[y1:y2, x1:x2]
             digit = get_puzzle.get_digits(cell)
             if digit is not None:
@@ -91,17 +101,20 @@ def sudoku_extractor(img_path):
                 digit_image = img_to_array(digit_image)
                 # since we need to specify that the image is grayscale, we expand the input to model
                 digit_image = np.expand_dims(digit_image, axis=0)
-
+                # values are predicted and stored to array.
                 prediction = model.predict(digit_image).argmax(axis=1)[0]
                 board[y,x] = prediction
-
-        locations.append(row)
     return board, warped
 
 def show_solution(solution):
     # pass numpy array as solution
     template = cv2.imread("./bin/template.jpg")
-    
+    """
+        The template image is divided into cells and the center
+        of each cell is calculated. Using OpenCV builtin function
+        putText(), the values from solution[] is placed into each cell.
+        Finally the image is saved as final_output.png, which is read from the website.
+    """
     X = template.shape[1] // 9
     Y = template.shape[0] // 9
     for y in range(0,9):
@@ -118,6 +131,3 @@ def show_solution(solution):
 
 def solver(board):
     return sudoku.solve(board)
-
-if __name__=="__main__":
-    sudoku_extractor("../examples/sudoku.jpg")

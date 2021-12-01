@@ -15,6 +15,7 @@ from tensorflow.keras.layers import (
 class sudoku_model:
     @staticmethod
     # this is the dimensions of the digits
+    # 2 convolution layers, each followed by max pooling to reduce the number of parameters
     def build(height, width, channels, classes):
         model = Sequential()
         model.add(Conv2D(50, (5, 5), strides=1, padding="same", activation="relu",
@@ -26,20 +27,29 @@ class sudoku_model:
         model.add(BatchNormalization())
         model.add(MaxPool2D((2,2), strides=2, padding="same" ))
         model.add(Flatten())
+        # 2 fully connected layers with relu activation
         model.add(Dense(units=512, activation="relu"))
         model.add(Dropout(0.2))
         model.add(Dense(units=512, activation="relu"))
         model.add(Dropout(0.3))
+        # the final layer has same number of units as there are digits
         model.add(Dense(units=num_categories, activation="softmax"))
 
         print(model.summary())
+        # since there are 10 categories we use the following loss function
         print(model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.0005), metrics=['accuracy']))
 
         return model
 
 
 if __name__ == "__main__":
-    (x_train, y_train), (x_valid, y_valid) = mnist.load_data() 
+    (x_train, y_train), (x_valid, y_valid) = mnist.load_data()
+    """
+    the data reshaped with 1 extra column
+    with values 1 to denote that it operates in the grayscale
+    spectrum;
+    pixel values in each image is scale between [0,1].
+    """
     x_train = x_train.reshape(-1,28,28,1)/255
     x_valid = x_valid.reshape(-1,28,28,1)/255
     print(x_train.shape)
@@ -50,6 +60,9 @@ if __name__ == "__main__":
     y_valid = keras.utils.to_categorical(y_valid, num_categories)
 
     # we are augmenting the data now
+    # This helps in training models to predict values 
+    # in images where the digits may not be in the center
+    # or it may be towards the side of the image
     datagen = ImageDataGenerator(
         width_shift_range=0.4,
         height_shift_range=0.4

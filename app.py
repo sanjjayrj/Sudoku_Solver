@@ -28,11 +28,15 @@ def home():
             filename = secure_filename(file.filename)
             img_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(img_path)
+            # On the website, the extracted sudoku, along with 
+            # and editable matrix with the values is shown.
             (board, warped_img) = sud.sudoku_extractor(img_path)
             cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], "warped_image.png"), warped_img)
             return render_template('index.html', state=1, arr=board)
     elif request.method == 'POST':
         corrected_board=np.zeros((9,9))
+        # user can edit/ verify the extracted sudoku, and return
+        # it is then sent to solve.
         for elem in request.form:
             index=elem[-2:]
             corrected_board[int(index[0]),int(index[1])]=int(request.form.get(elem))

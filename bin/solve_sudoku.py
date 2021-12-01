@@ -50,69 +50,36 @@ def solve(grid):
     forwards = True
     i = 0
     grid_original = np.array(grid, copy=True)
-
     while i <9*9:
-        
         if value(grid_original, i) == 0 and forwards:
-            
             for a in range(1, 10):
-                
                 if a not in cell(grid, i) and a not in row(grid, i) and a not in column(grid, i):
-                    
                     grid[grid_ref(i)] = a
                     i += 1
-                    
                     break
                 else:
-                    
                     if a == 9:
-                        
                         forwards = False
                         i -= 1 #goes back a cell
                         break
         elif value(grid_original, i) != 0 and forwards:
-            
             i += 1
-
         elif value(grid_original, i) == 0 and not forwards:
-            
             if grid[grid_ref(i)] == 9:
-                
                 grid[grid_ref(i)] = 0
-                
                 i -= 1
             else:
                 for a in range(grid[grid_ref(i)]+1, 10):
-                    
                     if a not in cell(grid, i) and a not in row(grid, i) and a not in column(grid, i):
-                        
                         grid[grid_ref(i)] = a
-                        
                         forwards = True
                         i += 1
                         break
                     else:
-                        
                         if a == 9:
-                            
                             grid[grid_ref(i)] = 0
-                            
                             i -= 1
                             break
         elif value(grid_original, i) != 0 and not forwards:
-            
             i -= 1
     return(grid)
-
-if __name__=="__main__":
-    puzzle = """000600000
-            706000009
-            000005080
-            070020093
-            800000005
-            430010070
-            050200000
-            300000208
-            002307000"""
-            
-    print(solve(create_grid(puzzle)))
