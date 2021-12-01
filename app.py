@@ -42,7 +42,8 @@ def home():
     else:
         if os.listdir(WORKING_DIRECTORY) != []:
             for f in os.listdir(WORKING_DIRECTORY):
-                os.remove(os.path.join(WORKING_DIRECTORY, f))
+                if f != "temp.txt":
+                    os.remove(os.path.join(WORKING_DIRECTORY, f))
         return render_template('index.html', state=0, arr=None)
 
 
