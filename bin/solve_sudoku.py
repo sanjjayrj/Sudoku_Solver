@@ -52,56 +52,55 @@ def solve(grid):
     grid_original = np.array(grid, copy=True)
 
     while i <9*9:
-        # print("Checking original grid cell "+str(grid_ref(i))+"...")
+        
         if value(grid_original, i) == 0 and forwards:
-            # print("Cell is empty in original grid, can place here.")
+            
             for a in range(1, 10):
-                # print("Checking rows, columns, and cells for "+str(a)+"s ...")
+                
                 if a not in cell(grid, i) and a not in row(grid, i) and a not in column(grid, i):
-                    # print("Placing "+str(a)+" at "+str(grid_ref(i))+".")
+                    
                     grid[grid_ref(i)] = a
                     i += 1
-                    # print(grid)
+                    
                     break
                 else:
-                    # print("Can't place "+str(a)+" here.")
+                    
                     if a == 9:
-                        # print("We can't place anything here!")
+                        
                         forwards = False
                         i -= 1 #goes back a cell
                         break
         elif value(grid_original, i) != 0 and forwards:
-            # print("Cell is filled in original grid, can't place here.")
+            
             i += 1
 
         elif value(grid_original, i) == 0 and not forwards:
-            # print("Cell is empty in original grid, can edit this one.")
+            
             if grid[grid_ref(i)] == 9:
-                # print("Cell can't be any other value; we can't place anything here!")
+                
                 grid[grid_ref(i)] = 0
-                # print("Resetting "+str(grid_ref(i))+" to zero.")
-                # print(grid)
+                
                 i -= 1
             else:
                 for a in range(grid[grid_ref(i)]+1, 10):
-                    # print("Checking rows, columns, and cells for "+str(a)+"s...")
+                    
                     if a not in cell(grid, i) and a not in row(grid, i) and a not in column(grid, i):
-                        # print("Placing "+str(a)+" at "+str(grid_ref(i))+".")
+                        
                         grid[grid_ref(i)] = a
-                        # print(grid)
+                        
                         forwards = True
                         i += 1
                         break
                     else:
-                        # print("Can't place "+str(a)+" here.")
+                        
                         if a == 9:
-                            # print("We can't place anything here!")
+                            
                             grid[grid_ref(i)] = 0
-                            # print(grid)
+                            
                             i -= 1
                             break
         elif value(grid_original, i) != 0 and not forwards:
-            # print("Cell is filled in orignial grid, can't place here.")
+            
             i -= 1
     return(grid)
 
