@@ -49,4 +49,4 @@ def home():
 
 app.secret_key = 'cb1501f35e034aa18dd6c3743f4363bb'
 app.config['UPLOAD_FOLDER'] = WORKING_DIRECTORY
-app.run(debug = True) 
+app.run(host ='0.0.0.0', port = 5001) 
